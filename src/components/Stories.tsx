@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Story} from '../type/story';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-type navigatorType = {
+export type navigatorType = {
   Status: Story;
 };
 
