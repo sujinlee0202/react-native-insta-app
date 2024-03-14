@@ -5,21 +5,52 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {RouteProp} from '@react-navigation/native';
 import {navigatorType} from '../components/Stories';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {Platform} from 'react-native';
 
 interface Props {
   route: RouteProp<navigatorType, 'Status'>;
   navigation: NativeStackNavigationProp<navigatorType, 'Status'>;
 }
 
+const statusBarHeight = getStatusBarHeight();
+
 const Status = ({route, navigation}: Props) => {
   const {name, image} = route.params;
+
+  // 0초에서 5초로
+  const progress = useRef(new Animated.Value(0)).current;
+
+  const progressAnimation = progress.interpolate({
+    inputRange: [0, 5],
+    outputRange: ['0%', '100%'],
+  });
+
+  useEffect(() => {
+    Animated.timing(progress, {
+      toValue: 5,
+      duration: 5000,
+      useNativeDriver: false,
+    }).start();
+  }, [progress]);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      navigation.goBack();
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [navigation]);
 
   const handlePressClose = () => {
     navigation.goBack();
@@ -28,8 +59,16 @@ const Status = ({route, navigation}: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
-      <View style={styles.timeProgress} />
-
+      <View style={styles.timeProgress}>
+        <Animated.View
+          style={[
+            styles.timeProgressAnimated,
+            {
+              width: progressAnimation,
+            },
+          ]}
+        />
+      </View>
       <View style={styles.profile}>
         <View style={styles.profileImageContainer}>
           <Image source={image} style={styles.profileImage} />
@@ -56,14 +95,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   timeProgress: {
+    marginTop: Platform.OS === 'ios' ? statusBarHeight : 0,
     height: 3,
-    width: '95%',
+    width: '100%',
     borderWidth: 1,
     backgroundColor: 'gray',
     position: 'absolute',
     top: 18,
   },
+  timeProgressAnimated: {
+    height: '100%',
+    backgroundColor: 'white',
+  },
   profile: {
+    marginTop: Platform.OS === 'ios' ? statusBarHeight : 0,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
