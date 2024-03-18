@@ -10,6 +10,7 @@ import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Stories from '../components/Stories';
+import Posts from '../components/Posts';
 
 const Home = () => {
   return (
@@ -26,7 +27,7 @@ const Home = () => {
       </View>
       <ScrollView>
         <Stories />
-        {/** Posts */}
+        <Posts />
       </ScrollView>
     </SafeAreaView>
   );
