@@ -2,7 +2,11 @@ import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {searchData} from '../../data/searchData';
 
-const SearchContent = () => {
+interface Props {
+  getData: (image: any) => void;
+}
+
+const SearchContent = ({getData}: Props) => {
   return (
     <View>
       {searchData.map((data, index) => {
@@ -15,7 +19,9 @@ const SearchContent = () => {
                   return (
                     <TouchableOpacity
                       key={imageIndex}
-                      style={styles.imageWrapper}>
+                      style={styles.imageWrapper}
+                      onPressIn={() => getData(imageData)}
+                      onPressOut={() => getData(null)}>
                       <Image source={imageData} style={styles.image} />
                     </TouchableOpacity>
                   );
@@ -31,13 +37,18 @@ const SearchContent = () => {
                     return (
                       <TouchableOpacity
                         key={imageIndex}
-                        style={styles.secondImageWrapper}>
+                        style={styles.secondImageWrapper}
+                        onPressIn={() => getData(imageData)}
+                        onPressOut={() => getData(null)}>
                         <Image source={imageData} style={styles.image} />
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-                <TouchableOpacity style={styles.secondLongImageWrapper}>
+                <TouchableOpacity
+                  onPressIn={() => getData(data.images[4])}
+                  onPressOut={() => getData(null)}
+                  style={styles.secondLongImageWrapper}>
                   <Image source={data.images[4]} style={styles.longImage} />
                 </TouchableOpacity>
               </View>
@@ -46,13 +57,18 @@ const SearchContent = () => {
             {/** 3번 UI */}
             {data.id === 2 ? (
               <View style={styles.thirdContainer}>
-                <TouchableOpacity style={styles.bigImageWrapper}>
+                <TouchableOpacity
+                  onPressIn={() => getData(data.images[2])}
+                  onPressOut={() => getData(null)}
+                  style={styles.bigImageWrapper}>
                   <Image source={data.images[2]} style={styles.bigImage} />
                 </TouchableOpacity>
                 <View style={styles.thirdContainerRight}>
                   {data.images.slice(0, 2).map((imageData, imageIndex) => {
                     return (
                       <TouchableOpacity
+                        onPressIn={() => getData(imageData)}
+                        onPressOut={() => getData(null)}
                         key={imageIndex}
                         style={styles.thirdImageWrapper}>
                         <Image source={imageData} style={styles.image} />
